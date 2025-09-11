@@ -1,0 +1,9 @@
+.Rhistory
+.Rapp.history
+.RData
+.Rproj.user/
+.Rproj
+.Renviron
+.Rprofile
+.DS_Store
+.vscode/
