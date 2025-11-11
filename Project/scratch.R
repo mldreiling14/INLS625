@@ -24,3 +24,20 @@ ggplot(a, aes(x=reorder(Measure.ID, -Missing_count), y = Missing_count)) +
   )
 
 
+percent_missing <- clean_score |> group_by(Measure.ID) |>
+  summarise(
+    total_obs = n(),
+    missing_obs = sum(is.na(Score)),
+    percent_missing = missing_obs / total_obs
+  ) |>
+  arrange(desc(percent_missing))
+percent_missing
+
+  score_count <- clean_score |> group_by(Measure.ID) |> sum()
+  score_missing <- clean_score |> group_by(Measure.ID) |> sum(is.na(Score))
+  
+  mutate(percent_missing = score_count / score_missing)
+}
+
+
+
