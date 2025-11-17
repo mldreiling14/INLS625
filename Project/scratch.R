@@ -1,10 +1,12 @@
 library('tidyverse')
 library('dplyr')
+library('stringr')
 
 timecare <- read.csv("source_data/Timely_and_Effective_Care-Hospital.csv")
 HRR <- read.csv("source_data/FY_2025_Hospital_Readmissions_Reduction_Program_Hospital.csv")
 
 wider <- timecare |> pivot_wider(names_from = Measure.ID, values_from = Score)
+wider |> glimpse()
 
 clean_score <- timecare |> mutate(
   Score = if_else(Score == 0, NA, Score),
@@ -31,13 +33,34 @@ percent_missing <- clean_score |> group_by(Measure.ID) |>
     percent_missing = missing_obs / total_obs
   ) |>
   arrange(desc(percent_missing))
-percent_missing
 
-  score_count <- clean_score |> group_by(Measure.ID) |> sum()
-  score_missing <- clean_score |> group_by(Measure.ID) |> sum(is.na(Score))
+percent_missing |> print(n=26)
+
+score_count <- clean_score |> group_by(Measure.ID) |> sum()
+score_missing <- clean_score |> group_by(Measure.ID) |> sum(is.na(Score))
   
-  mutate(percent_missing = score_count / score_missing)
+mutate(percent_missing = score_count / score_missing)
+
+
+score_table <- function(x){
+  clean_score |>
+      filter(Measure.ID == x) |>
+      mutate(
+        Score_numeric = suppressWarnings(as.numeric(str_remove_all(Score, "%")))
+      ) |>
+      select(Measure.ID, Score, Score_numeric)
 }
+
+measure_ids <- unique(clean_score$Measure.ID)
+
+for (id in measure_ids) {
+  temp_table <- score_table(id)
+  safe_id <- gsub("[^A-Za-z0-9_-]", "_", id)
+  file_name <- paste0("measure_", safe_id, "_scores.csv")
+  write.csv(temp_table, file_name, row.names = FALSE)
+}
+
+ 
 
 
 
