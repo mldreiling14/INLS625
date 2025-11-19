@@ -1,5 +1,6 @@
 library(stats)
 
+
 ed_vars <- c("OP_18b", "OP_18c", "OP_22", "EDV")
 prev_vars <- c("SAFE_USE_OF_OPIOIDS", "IMM_3", "HCP_COVID_19")
 
@@ -38,6 +39,7 @@ prev_scores <- as.data.frame(pca_prev$x) |>
   select(PC1) |>
   mutate(facility_id = timely_wide$facility_id) |>
   rename(prevention_pc1 = PC1)
+
 
 ## Join back
 timely_with_groups <- timely_wide |>

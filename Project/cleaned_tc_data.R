@@ -66,4 +66,3 @@ dim(timely_wide)
 colSums(is.na(timely_wide)) / nrow(timely_wide)
 
 write.csv(timely_wide, "manufactured_data/timely_wide.csv", row.names = FALSE)
-
